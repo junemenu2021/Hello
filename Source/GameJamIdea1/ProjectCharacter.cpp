@@ -76,6 +76,17 @@ void AProjectCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
   PlayerInputComponent->BindAxis("MoveRight", this, &AProjectCharacter::MoveRight);
 }
 
+bool AProjectCharacter::IsOtherActorHostile(AActor* OtherActor) 
+{
+  return IsOtherHostile(OtherActor);
+}
+
+void AProjectCharacter::PossessedBy(AController* NewController) 
+{
+  Super::PossessedBy(NewController);
+  SetTeamIDByControllerType();
+}
+
 void AProjectCharacter::MoveForward(float Value) {
   if (Value == 0 || !ensure(GetController()))
     return;
@@ -114,5 +125,16 @@ void AProjectCharacter::OnManaChanged(float Mana, float MaxMana)
 void AProjectCharacter::OnMainAttributeChanged(EAttributeType Type, float CurrentAttributeValue) 
 {
   BP_OnMainAttributeChanged(Type, CurrentAttributeValue);
+}
+
+void AProjectCharacter::SetTeamIDByControllerType() 
+{
+  if (!GetController()) return;
+	if (IsPlayerControlled()) {
+		TeamID = 0;
+	}
+	else {
+		TeamID = 1;
+	}
 }
 

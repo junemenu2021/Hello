@@ -8,11 +8,12 @@
 #include "GameplayEffectTypes.h"
 #include "GameplayEffect.h"
 #include "AbilityTypes.h"
+#include "TaggedActor.h"
 
 #include "ProjectCharacter.generated.h"
 
 UCLASS()
-class GAMEJAMIDEA1_API AProjectCharacter : public ACharacter, public IAbilitySystemInterface
+class GAMEJAMIDEA1_API AProjectCharacter : public ACharacter, public IAbilitySystemInterface, public ITaggedActor
 {
 	GENERATED_BODY()
 
@@ -33,6 +34,11 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	bool bIsDead = false;
+	
+	UFUNCTION(BlueprintCallable)
+	bool IsOtherActorHostile(AActor* OtherActor);
+
+	virtual void PossessedBy(AController* NewController) override;
 
 protected:
 	// Called when the game starts or when spawned
@@ -67,4 +73,5 @@ private:
 	void OnManaChanged(float Mana, float MaxMana);
 	UFUNCTION()
 	void OnMainAttributeChanged(EAttributeType Type, float CurrentAttributeValue);
+	void SetTeamIDByControllerType();
 };
